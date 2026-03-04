@@ -3,7 +3,7 @@ Add-Type -AssemblyName System.Drawing
 
 # Creazione del form principale
 $form = New-Object System.Windows.Forms.Form
-$form.Text = "Daanii06_ Fileless Clicker"
+$form.Text = "By Made Daanii06_ "
 $form.Size = New-Object System.Drawing.Size(360, 360)
 $form.StartPosition = "CenterScreen"
 $form.FormBorderStyle = "None"
@@ -67,7 +67,7 @@ $dragPanel.Controls.Add($buttonClose)
 
 # Titolo
 $labelTitle = New-Object System.Windows.Forms.Label
-$labelTitle.Text = "Daanii06_ Fileless"
+$labelTitle.Text = "charizard Fileless"
 $labelTitle.Location = New-Object System.Drawing.Point(40, 5)
 $labelTitle.Size = New-Object System.Drawing.Size(240, 30)
 $labelTitle.Font = New-Object System.Drawing.Font("Segoe UI", 14, [System.Drawing.FontStyle]::Bold)
@@ -241,7 +241,7 @@ $form.Add_KeyDown({
 
 # Footer
 $footer = New-Object System.Windows.Forms.Label
-$footer.Text = "Charrizard Filless"
+$footer.Text = "By Daanii06_"
 $footer.Location = New-Object System.Drawing.Point(0, 320)
 $footer.Size = New-Object System.Drawing.Size(360, 20)
 $footer.ForeColor = [System.Drawing.Color]::FromArgb(100, 100, 100)
@@ -250,7 +250,7 @@ $footer.TextAlign = "MiddleCenter"
 $form.Controls.Add($footer)
 
 # Messaggio di avvio
-Write-Host "Daanii06_ Fileless Clicker" -ForegroundColor Red
+Write-Host "Daanii06_" -ForegroundColor Red
 Write-Host "Loaded successfully!" -ForegroundColor White
 
 # Mostra il form
