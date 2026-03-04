@@ -88,7 +88,7 @@ $dragPanel.Controls.Add($pictureBox)
 
 # Titolo (spostato leggermente a destra per fare spazio all'immagine)
 $labelTitle = New-Object System.Windows.Forms.Label
-$labelTitle.Text = "Zekrom"
+$labelTitle.Text = "Zekrom Fileless"
 $labelTitle.Location = New-Object System.Drawing.Point(50, 10)
 $labelTitle.Size = New-Object System.Drawing.Size(230, 30)
 $labelTitle.Font = New-Object System.Drawing.Font("Segoe UI", 14, [System.Drawing.FontStyle]::Bold)
