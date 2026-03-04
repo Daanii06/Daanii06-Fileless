@@ -61,7 +61,6 @@ $buttonClose.Add_MouseLeave({ $buttonClose.ForeColor = [System.Drawing.Color]::F
 $buttonClose.Add_Click({
     if ($script:leftTimer) { $script:leftTimer.Stop(); $script:leftTimer.Dispose() }
     if ($script:rightTimer) { $script:rightTimer.Stop(); $script:rightTimer.Dispose() }
-    if ($script:keyCheckTimer) { $script:keyCheckTimer.Stop(); $script:keyCheckTimer.Dispose() }
     $form.Close()
 })
 $dragPanel.Controls.Add($buttonClose)
@@ -104,7 +103,7 @@ $leftClickBtn.Add_Click({
         $leftClickBtn.FlatAppearance.BorderColor = [System.Drawing.Color]::FromArgb(255, 60, 60)
     } else {
         $script:leftTimer = New-Object System.Windows.Forms.Timer
-        $script:leftTimer.Interval = 50
+        $script:leftTimer.Interval = $trackbar.Value
         $script:leftTimer.Add_Tick({
             [System.Windows.Forms.Cursor]::Position = [System.Windows.Forms.Cursor]::Position
             Add-Type -AssemblyName System.Windows.Forms
@@ -146,7 +145,7 @@ $rightClickBtn.Add_Click({
         $rightClickBtn.FlatAppearance.BorderColor = [System.Drawing.Color]::FromArgb(255, 60, 60)
     } else {
         $script:rightTimer = New-Object System.Windows.Forms.Timer
-        $script:rightTimer.Interval = 50
+        $script:rightTimer.Interval = $trackbar.Value
         $script:rightTimer.Add_Tick({
             [System.Windows.Forms.Cursor]::Position = [System.Windows.Forms.Cursor]::Position
             Add-Type -AssemblyName System.Windows.Forms
@@ -214,30 +213,31 @@ $hotkeysLabel.Font = New-Object System.Drawing.Font("Segoe UI", 9)
 $hotkeysLabel.TextAlign = "MiddleCenter"
 $form.Controls.Add($hotkeysLabel)
 
-# Key check timer
-$script:keyCheckTimer = New-Object System.Windows.Forms.Timer
-$script:keyCheckTimer.Interval = 50
-$script:keyCheckTimer.Add_Tick({
-    if ([System.Windows.Forms.Control]::ModifierKeys -eq [System.Windows.Forms.Keys]::None) {
-        if ([System.Windows.Forms.Control]::IsKeyLocked([System.Windows.Forms.Keys]::F6)) {
+# Gestione eventi tastiera - NUOVA VERSIONE
+$form.Add_KeyDown({
+    param($sender, $e)
+    switch ($e.KeyCode) {
+        'F6' {
             if (-not $script:leftTimer -or -not $script:leftTimer.Enabled) {
                 $leftClickBtn.PerformClick()
             }
+            $e.SuppressKeyPress = $true
         }
-        elseif ([System.Windows.Forms.Control]::IsKeyLocked([System.Windows.Forms.Keys]::F7)) {
+        'F7' {
             if (-not $script:rightTimer -or -not $script:rightTimer.Enabled) {
                 $rightClickBtn.PerformClick()
             }
+            $e.SuppressKeyPress = $true
         }
-        elseif ([System.Windows.Forms.Control]::IsKeyLocked([System.Windows.Forms.Keys]::F8)) {
+        'F8' {
             if (($script:leftTimer -and $script:leftTimer.Enabled) -or ($script:rightTimer -and $script:rightTimer.Enabled)) {
                 if ($script:leftTimer -and $script:leftTimer.Enabled) { $leftClickBtn.PerformClick() }
                 if ($script:rightTimer -and $script:rightTimer.Enabled) { $rightClickBtn.PerformClick() }
             }
+            $e.SuppressKeyPress = $true
         }
     }
 })
-$script:keyCheckTimer.Start()
 
 # Footer
 $footer = New-Object System.Windows.Forms.Label
