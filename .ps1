@@ -241,7 +241,7 @@ $form.Add_KeyDown({
 
 # Footer
 $footer = New-Object System.Windows.Forms.Label
-$footer.Text = "DAANII06_ FILELESS"
+$footer.Text = "Charrizard Filless"
 $footer.Location = New-Object System.Drawing.Point(0, 320)
 $footer.Size = New-Object System.Drawing.Size(360, 20)
 $footer.ForeColor = [System.Drawing.Color]::FromArgb(100, 100, 100)
@@ -250,7 +250,7 @@ $footer.TextAlign = "MiddleCenter"
 $form.Controls.Add($footer)
 
 # Messaggio di avvio
-Write-Host "Daanii06_ Fileless Clicker - Red & Black Edition" -ForegroundColor Red
+Write-Host "Daanii06_ Fileless Clicker" -ForegroundColor Red
 Write-Host "Loaded successfully!" -ForegroundColor White
 
 # Mostra il form
