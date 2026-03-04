@@ -1,20 +1,33 @@
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
+# Funzione per convertire base64 a immagine (Zekrom)
+function Convert-Base64ToImage {
+    param([string]$base64String)
+    $bytes = [Convert]::FromBase64String($base64String)
+    $ms = New-Object System.IO.MemoryStream($bytes, 0, $bytes.Length)
+    $ms.Write($bytes, 0, $bytes.Length)
+    $img = [System.Drawing.Image]::FromStream($ms, $true)
+    return $img
+}
+
+# Base64 dell'immagine Zekrom (versione minimal in bianco e nero)
+$zekromBase64 = "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAA7AAAAOwBeShxvQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAUFSURBVFiFzZdbbBRVGMf/s7szW7rd7ZYCpVwK2CY1YIhY2iiaaHzRB4m+KEZiNBofNJCYKBE1vkgw0Rc0vuiL94co3mh8MBriAzG1iTFNaGJslFhrY2tLpS3d3Z2d2Zk53g/T7bbd7g7b4kP/ybycOd/5nzP/mfOdbwR8+PDhw4cPHz58eIwYEYC3lxQpAgAeK9wbsFQAILP52ToLgPNPrucL91rHbyo8/fptC1m90pWry08Grz+V7n1k5r0WAMCbR1rE1o+zI22Hc6k1T19O3/7QQPqWfZfTt6y6nL51IJ+8OZZL3AqA32QB2PpU42Qsk/5l9Y0zF1Y3zFxa1TBzeVXD7OXKhplgZf1MMJzLBMO5TLA2nw3Gc5lgPJcJNl7uTd/Q0J+5MQBgo39NFq1pnr7Y2DRzubpx5kp1w8yVqoYZqK6fRah+FuF8NlgLAJX0rq6fQRiAaKphMrKucyxS1XgJQM0WQRU7P7oZ8dau4etN3ZciTd2XItFdZxHNpALRRFOouj8VqO7PBiL9uUAgmQ4G7GtBIJkOBpLpUGAgn6s60pPeGoBzCwCgY0M9+sz62qXLay5dXVZz6eqy6sarlyvrriFUPwEzmQpGAdhO5zOBcD4TCOczgXA+EwjnM4FwPp8JpvKZYGNmOn1TY34mCgBPzwcAgN27d+PFF1/Ehx9+iC+//BIbN25ES0uLp8KJRGKeAACe2tGOD1/fgY/e2I7drz6BzS0hT2M9+XS7Z6tYW1uLZ599Fu3t7Th37hzOnj2Lvr4+9Pf349ixY1i+fLmn8Tt33IZIxUzMZRlVK6rU1Yt9/fXXaGlpwenTp7Fjxw4cPnwYXV1d6O7uxq5du7Bp0ybP5KPRKJqamrB582a8//77yGazeP7559Hb24tr166ht7cXmzZtQjQa9US+d/cvB2bPHjWyuZz0VN7R0YG1a9eir68PH3/8Ma5cuYJ0Oo2+vj58+eWXaGpq8lS+rq4OqVQK6XQa6XQayWQSZ86cwd69e3Hs2DF0dXXh6tWrmJmZ8UR+76YVx4EacNZZW0sybwVffvkl1q1bh/HxcTz//PMYGBjA5OQkJicn0d/fj5deegkDAwOeyT/44IMYGBhAJpPBuXPnMDk5iWQyicnJSUxOTuKDDz7A2rVrPZHfs3H5z8qT6Jw1o/X2pQhqPJQfHR3FiRMnMDIyglQqBdu2Yds2RkZGcOLECYyNjXkiv2P9stNYXYmDq+rRWWMr32JRq9di27Zt2LJlCzZv3ozW1lY0NjYil8uho6MDW7ZswebNm9Ha2gqllCfy7WvCvwPYj3tuQKjSwuBkFkNhC+8GzHkCbW1taGpqQmNjI5RSsCwLwWAQjY2NaGpqQltbG4LBoCfyqyJzAPDnYhNc1TCDsYyNWJWNb6tNvBMw8fm/PvF8/T4AHP/0VixdZM2VTBkbN9YaWGTM19+1a5e8+uqr8uijj8rDDz8sW7dulR07dsiOHTvk0Ucflddee02y2awr8tlLk/Ld4B35Z2ZOYv/+/XLw4EHp6uqSY8eOSTKZdEW+Z2PdAXANgI5sCpvX3eCqgKqqKqxZswZKKQghoJSCZVlYvXo1qqurXZOP1gXXAohms6iuNmHbtsRiMQSDQYTDYdTW1iKXyyEej7siv2hBZS5S8zRGAQBlZSHMzs4im81ifHwcpmliZmYGs7OzyGazmJiYwOzsrCvyS0MVTwGgrV4hWj6N1c0P4KPT31fcDyGEB+ryBcDn3z6GYgMh5l5T9hP5gmn4AODDhw8fPnz48OEDwH8u1B8mLp5T2gAAAABJRU5ErkJggg=="
+
 # Creazione del form principale
 $form = New-Object System.Windows.Forms.Form
 $form.Text = "By Made Daanii06_ "
 $form.Size = New-Object System.Drawing.Size(360, 360)
 $form.StartPosition = "CenterScreen"
 $form.FormBorderStyle = "None"
-$form.BackColor = [System.Drawing.Color]::FromArgb(15, 15, 15)
+$form.BackColor = [System.Drawing.Color]::FromArgb(10, 10, 10)  # Nero più profondo
 $form.TopMost = $true
 $form.KeyPreview = $true
 
 # Pannello di trascinamento
 $dragPanel = New-Object System.Windows.Forms.Panel
 $dragPanel.Location = New-Object System.Drawing.Point(0, 0)
-$dragPanel.Size = New-Object System.Drawing.Size(360, 40)
+$dragPanel.Size = New-Object System.Drawing.Size(360, 50)  # Leggermente più alto
 $dragPanel.BackColor = [System.Drawing.Color]::FromArgb(20, 20, 20)
 $dragPanel.Cursor = [System.Windows.Forms.Cursors]::SizeAll
 
@@ -48,16 +61,16 @@ $form.Controls.Add($dragPanel)
 # Pulsante chiusura
 $buttonClose = New-Object System.Windows.Forms.Button
 $buttonClose.Text = "×"
-$buttonClose.Location = New-Object System.Drawing.Point(325, 5)
+$buttonClose.Location = New-Object System.Drawing.Point(325, 10)
 $buttonClose.Size = New-Object System.Drawing.Size(30, 30)
 $buttonClose.FlatStyle = "Flat"
 $buttonClose.FlatAppearance.BorderSize = 0
 $buttonClose.BackColor = [System.Drawing.Color]::FromArgb(20, 20, 20)
-$buttonClose.ForeColor = [System.Drawing.Color]::FromArgb(255, 60, 60)
+$buttonClose.ForeColor = [System.Drawing.Color]::FromArgb(255, 255, 255)  # Bianco
 $buttonClose.Font = New-Object System.Drawing.Font("Segoe UI", 16, [System.Drawing.FontStyle]::Bold)
 $buttonClose.Cursor = [System.Windows.Forms.Cursors]::Hand
-$buttonClose.Add_MouseEnter({ $buttonClose.ForeColor = [System.Drawing.Color]::FromArgb(255, 120, 120) })
-$buttonClose.Add_MouseLeave({ $buttonClose.ForeColor = [System.Drawing.Color]::FromArgb(255, 60, 60) })
+$buttonClose.Add_MouseEnter({ $buttonClose.ForeColor = [System.Drawing.Color]::FromArgb(180, 180, 180) })  # Grigio chiaro
+$buttonClose.Add_MouseLeave({ $buttonClose.ForeColor = [System.Drawing.Color]::FromArgb(255, 255, 255) })  # Bianco
 $buttonClose.Add_Click({
     if ($script:leftTimer) { $script:leftTimer.Stop(); $script:leftTimer.Dispose() }
     if ($script:rightTimer) { $script:rightTimer.Stop(); $script:rightTimer.Dispose() }
@@ -65,42 +78,52 @@ $buttonClose.Add_Click({
 })
 $dragPanel.Controls.Add($buttonClose)
 
-# Titolo
+# Immagine Zekrom (a sinistra)
+$pictureBox = New-Object System.Windows.Forms.PictureBox
+$pictureBox.Location = New-Object System.Drawing.Point(10, 8)
+$pictureBox.Size = New-Object System.Drawing.Size(32, 32)
+$pictureBox.SizeMode = [System.Windows.Forms.PictureBoxSizeMode]::StretchImage
+$pictureBox.Image = Convert-Base64ToImage -base64String $zekromBase64
+$dragPanel.Controls.Add($pictureBox)
+
+# Titolo (spostato leggermente a destra per fare spazio all'immagine)
 $labelTitle = New-Object System.Windows.Forms.Label
-$labelTitle.Text = "Reshiram Fileless"
-$labelTitle.Location = New-Object System.Drawing.Point(40, 5)
-$labelTitle.Size = New-Object System.Drawing.Size(240, 30)
+$labelTitle.Text = "Zekrom"
+$labelTitle.Location = New-Object System.Drawing.Point(50, 10)
+$labelTitle.Size = New-Object System.Drawing.Size(230, 30)
 $labelTitle.Font = New-Object System.Drawing.Font("Segoe UI", 14, [System.Drawing.FontStyle]::Bold)
-$labelTitle.ForeColor = [System.Drawing.Color]::FromArgb(255, 255, 255)
-$labelTitle.TextAlign = "MiddleCenter"
+$labelTitle.ForeColor = [System.Drawing.Color]::FromArgb(255, 255, 255)  # Bianco
+$labelTitle.TextAlign = "MiddleLeft"
 $dragPanel.Controls.Add($labelTitle)
 
-# Separatore con gradiente
+# Separatore con gradiente (bianco)
 $separator = New-Object System.Windows.Forms.Panel
-$separator.Location = New-Object System.Drawing.Point(30, 70)
+$separator.Location = New-Object System.Drawing.Point(30, 80)
 $separator.Size = New-Object System.Drawing.Size(300, 2)
-$separator.BackColor = [System.Drawing.Color]::FromArgb(255, 60, 60)
+$separator.BackColor = [System.Drawing.Color]::FromArgb(255, 255, 255)  # Bianco
 $form.Controls.Add($separator)
 
 # Left click button
 $leftClickBtn = New-Object System.Windows.Forms.Button
 $leftClickBtn.Text = "LEFT CLICK"
-$leftClickBtn.Location = New-Object System.Drawing.Point(40, 100)
+$leftClickBtn.Location = New-Object System.Drawing.Point(40, 110)
 $leftClickBtn.Size = New-Object System.Drawing.Size(130, 40)
 $leftClickBtn.FlatStyle = "Flat"
-$leftClickBtn.FlatAppearance.BorderColor = [System.Drawing.Color]::FromArgb(255, 60, 60)
-$leftClickBtn.FlatAppearance.BorderSize = 2
-$leftClickBtn.BackColor = [System.Drawing.Color]::FromArgb(20, 20, 20)
-$leftClickBtn.ForeColor = [System.Drawing.Color]::White
+$leftClickBtn.FlatAppearance.BorderColor = [System.Drawing.Color]::FromArgb(255, 255, 255)  # Bianco
+$leftClickBtn.FlatAppearance.BorderSize = 1
+$leftClickBtn.BackColor = [System.Drawing.Color]::FromArgb(10, 10, 10)
+$leftClickBtn.ForeColor = [System.Drawing.Color]::FromArgb(255, 255, 255)
 $leftClickBtn.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
 $leftClickBtn.Cursor = [System.Windows.Forms.Cursors]::Hand
+$leftClickBtn.Add_MouseEnter({ $leftClickBtn.BackColor = [System.Drawing.Color]::FromArgb(30, 30, 30) })
+$leftClickBtn.Add_MouseLeave({ $leftClickBtn.BackColor = [System.Drawing.Color]::FromArgb(10, 10, 10) })
 $leftClickBtn.Add_Click({
     if ($script:leftTimer -and $script:leftTimer.Enabled) {
         $script:leftTimer.Stop()
-        $leftClickBtn.BackColor = [System.Drawing.Color]::FromArgb(20, 20, 20)
+        $leftClickBtn.BackColor = [System.Drawing.Color]::FromArgb(10, 10, 10)
         $leftClickBtn.ForeColor = [System.Drawing.Color]::White
         $leftClickBtn.Text = "LEFT CLICK"
-        $leftClickBtn.FlatAppearance.BorderColor = [System.Drawing.Color]::FromArgb(255, 60, 60)
+        $leftClickBtn.FlatAppearance.BorderColor = [System.Drawing.Color]::White
     } else {
         $script:leftTimer = New-Object System.Windows.Forms.Timer
         $script:leftTimer.Interval = $trackbar.Value
@@ -116,10 +139,10 @@ public static extern void mouse_event(long dwFlags, long dx, long dy, long cButt
             $SendMouseClick::mouse_event(0x00000004, 0, 0, 0, 0)
         })
         $script:leftTimer.Start()
-        $leftClickBtn.BackColor = [System.Drawing.Color]::FromArgb(255, 60, 60)
-        $leftClickBtn.ForeColor = [System.Drawing.Color]::Black
+        $leftClickBtn.BackColor = [System.Drawing.Color]::FromArgb(255, 255, 255)  # Bianco
+        $leftClickBtn.ForeColor = [System.Drawing.Color]::FromArgb(10, 10, 10)  # Nero
         $leftClickBtn.Text = "LEFT ON"
-        $leftClickBtn.FlatAppearance.BorderColor = [System.Drawing.Color]::White
+        $leftClickBtn.FlatAppearance.BorderColor = [System.Drawing.Color]::FromArgb(10, 10, 10)  # Nero
     }
 })
 $form.Controls.Add($leftClickBtn)
@@ -127,22 +150,24 @@ $form.Controls.Add($leftClickBtn)
 # Right click button
 $rightClickBtn = New-Object System.Windows.Forms.Button
 $rightClickBtn.Text = "RIGHT CLICK"
-$rightClickBtn.Location = New-Object System.Drawing.Point(190, 100)
+$rightClickBtn.Location = New-Object System.Drawing.Point(190, 110)
 $rightClickBtn.Size = New-Object System.Drawing.Size(130, 40)
 $rightClickBtn.FlatStyle = "Flat"
-$rightClickBtn.FlatAppearance.BorderColor = [System.Drawing.Color]::FromArgb(255, 60, 60)
-$rightClickBtn.FlatAppearance.BorderSize = 2
-$rightClickBtn.BackColor = [System.Drawing.Color]::FromArgb(20, 20, 20)
-$rightClickBtn.ForeColor = [System.Drawing.Color]::White
+$rightClickBtn.FlatAppearance.BorderColor = [System.Drawing.Color]::FromArgb(255, 255, 255)  # Bianco
+$rightClickBtn.FlatAppearance.BorderSize = 1
+$rightClickBtn.BackColor = [System.Drawing.Color]::FromArgb(10, 10, 10)
+$rightClickBtn.ForeColor = [System.Drawing.Color]::FromArgb(255, 255, 255)
 $rightClickBtn.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
 $rightClickBtn.Cursor = [System.Windows.Forms.Cursors]::Hand
+$rightClickBtn.Add_MouseEnter({ $rightClickBtn.BackColor = [System.Drawing.Color]::FromArgb(30, 30, 30) })
+$rightClickBtn.Add_MouseLeave({ $rightClickBtn.BackColor = [System.Drawing.Color]::FromArgb(10, 10, 10) })
 $rightClickBtn.Add_Click({
     if ($script:rightTimer -and $script:rightTimer.Enabled) {
         $script:rightTimer.Stop()
-        $rightClickBtn.BackColor = [System.Drawing.Color]::FromArgb(20, 20, 20)
+        $rightClickBtn.BackColor = [System.Drawing.Color]::FromArgb(10, 10, 10)
         $rightClickBtn.ForeColor = [System.Drawing.Color]::White
         $rightClickBtn.Text = "RIGHT CLICK"
-        $rightClickBtn.FlatAppearance.BorderColor = [System.Drawing.Color]::FromArgb(255, 60, 60)
+        $rightClickBtn.FlatAppearance.BorderColor = [System.Drawing.Color]::White
     } else {
         $script:rightTimer = New-Object System.Windows.Forms.Timer
         $script:rightTimer.Interval = $trackbar.Value
@@ -158,10 +183,10 @@ public static extern void mouse_event(long dwFlags, long dx, long dy, long cButt
             $SendMouseClick::mouse_event(0x00000010, 0, 0, 0, 0)
         })
         $script:rightTimer.Start()
-        $rightClickBtn.BackColor = [System.Drawing.Color]::FromArgb(255, 60, 60)
-        $rightClickBtn.ForeColor = [System.Drawing.Color]::Black
+        $rightClickBtn.BackColor = [System.Drawing.Color]::FromArgb(255, 255, 255)  # Bianco
+        $rightClickBtn.ForeColor = [System.Drawing.Color]::FromArgb(10, 10, 10)  # Nero
         $rightClickBtn.Text = "RIGHT ON"
-        $rightClickBtn.FlatAppearance.BorderColor = [System.Drawing.Color]::White
+        $rightClickBtn.FlatAppearance.BorderColor = [System.Drawing.Color]::FromArgb(10, 10, 10)  # Nero
     }
 })
 $form.Controls.Add($rightClickBtn)
@@ -169,9 +194,9 @@ $form.Controls.Add($rightClickBtn)
 # Speed control label
 $speedLabel = New-Object System.Windows.Forms.Label
 $speedLabel.Text = "CLICK SPEED (MS)"
-$speedLabel.Location = New-Object System.Drawing.Point(40, 160)
+$speedLabel.Location = New-Object System.Drawing.Point(40, 170)
 $speedLabel.Size = New-Object System.Drawing.Size(280, 20)
-$speedLabel.ForeColor = [System.Drawing.Color]::FromArgb(200, 200, 200)
+$speedLabel.ForeColor = [System.Drawing.Color]::FromArgb(200, 200, 200)  # Grigio chiaro
 $speedLabel.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
 $speedLabel.TextAlign = "MiddleCenter"
 $form.Controls.Add($speedLabel)
@@ -179,23 +204,23 @@ $form.Controls.Add($speedLabel)
 # Speed display
 $speedDisplay = New-Object System.Windows.Forms.Label
 $speedDisplay.Text = "50"
-$speedDisplay.Location = New-Object System.Drawing.Point(40, 180)
+$speedDisplay.Location = New-Object System.Drawing.Point(40, 190)
 $speedDisplay.Size = New-Object System.Drawing.Size(280, 30)
-$speedDisplay.ForeColor = [System.Drawing.Color]::FromArgb(255, 60, 60)
+$speedDisplay.ForeColor = [System.Drawing.Color]::FromArgb(255, 255, 255)  # Bianco
 $speedDisplay.Font = New-Object System.Drawing.Font("Segoe UI", 18, [System.Drawing.FontStyle]::Bold)
 $speedDisplay.TextAlign = "MiddleCenter"
 $form.Controls.Add($speedDisplay)
 
 # Speed trackbar
 $trackbar = New-Object System.Windows.Forms.TrackBar
-$trackbar.Location = New-Object System.Drawing.Point(40, 220)
+$trackbar.Location = New-Object System.Drawing.Point(40, 230)
 $trackbar.Size = New-Object System.Drawing.Size(280, 45)
 $trackbar.Minimum = 10
 $trackbar.Maximum = 200
 $trackbar.Value = 50
 $trackbar.TickFrequency = 10
-$trackbar.BackColor = [System.Drawing.Color]::FromArgb(15, 15, 15)
-$trackbar.ForeColor = [System.Drawing.Color]::FromArgb(255, 60, 60)
+$trackbar.BackColor = [System.Drawing.Color]::FromArgb(10, 10, 10)
+$trackbar.ForeColor = [System.Drawing.Color]::FromArgb(255, 255, 255)  # Bianco
 $trackbar.Add_ValueChanged({
     $speedDisplay.Text = $trackbar.Value.ToString()
     if ($script:leftTimer) { $script:leftTimer.Interval = $trackbar.Value }
@@ -206,14 +231,14 @@ $form.Controls.Add($trackbar)
 # Hotkeys info
 $hotkeysLabel = New-Object System.Windows.Forms.Label
 $hotkeysLabel.Text = "HOTKEYS: F6 (LEFT) | F7 (RIGHT) | F8 (STOP)"
-$hotkeysLabel.Location = New-Object System.Drawing.Point(40, 280)
+$hotkeysLabel.Location = New-Object System.Drawing.Point(40, 290)
 $hotkeysLabel.Size = New-Object System.Drawing.Size(280, 30)
-$hotkeysLabel.ForeColor = [System.Drawing.Color]::FromArgb(150, 150, 150)
+$hotkeysLabel.ForeColor = [System.Drawing.Color]::FromArgb(150, 150, 150)  # Grigio
 $hotkeysLabel.Font = New-Object System.Drawing.Font("Segoe UI", 9)
 $hotkeysLabel.TextAlign = "MiddleCenter"
 $form.Controls.Add($hotkeysLabel)
 
-# Gestione eventi tastiera - NUOVA VERSIONE
+# Gestione eventi tastiera
 $form.Add_KeyDown({
     param($sender, $e)
     switch ($e.KeyCode) {
@@ -242,16 +267,16 @@ $form.Add_KeyDown({
 # Footer
 $footer = New-Object System.Windows.Forms.Label
 $footer.Text = "By Daanii06_"
-$footer.Location = New-Object System.Drawing.Point(0, 320)
+$footer.Location = New-Object System.Drawing.Point(0, 330)
 $footer.Size = New-Object System.Drawing.Size(360, 20)
-$footer.ForeColor = [System.Drawing.Color]::FromArgb(100, 100, 100)
+$footer.ForeColor = [System.Drawing.Color]::FromArgb(100, 100, 100)  # Grigio scuro
 $footer.Font = New-Object System.Drawing.Font("Segoe UI", 8)
 $footer.TextAlign = "MiddleCenter"
 $form.Controls.Add($footer)
 
 # Messaggio di avvio
-Write-Host "Daanii06_" -ForegroundColor Red
-Write-Host "Loaded successfully!" -ForegroundColor White
+Write-Host "By Daanii06_" -ForegroundColor White
+Write-Host "Loaded successfully!" -ForegroundColor Green
 
 # Mostra il form
 [void]$form.ShowDialog()
