@@ -11,14 +11,44 @@ $form.BackColor = [System.Drawing.Color]::FromArgb(10, 10, 10)  # Nero più prof
 $form.TopMost = $true
 $form.KeyPreview = $true
 
-# Pannello di trascinamento
+# Variabili per il trascinamento
+$script:dragging = $false
+$script:offsetX = 0
+$script:offsetY = 0
+
+# Eventi per il trascinamento su tutto il form
+$form.Add_MouseDown({
+    param($sender, $e)
+    if ($e.Button -eq [System.Windows.Forms.MouseButtons]::Left) {
+        $script:dragging = $true
+        $script:offsetX = $e.X
+        $script:offsetY = $e.Y
+    }
+})
+
+$form.Add_MouseMove({
+    param($sender, $e)
+    if ($script:dragging) {
+        $form.Location = New-Object System.Drawing.Point(
+            ($form.Location.X + $e.X - $script:offsetX),
+            ($form.Location.Y + $e.Y - $script:offsetY)
+        )
+    }
+})
+
+$form.Add_MouseUp({
+    param($sender, $e)
+    $script:dragging = $false
+})
+
+# Pannello di trascinamento superiore (opzionale, per avere un'area dedicata)
 $dragPanel = New-Object System.Windows.Forms.Panel
 $dragPanel.Location = New-Object System.Drawing.Point(0, 0)
 $dragPanel.Size = New-Object System.Drawing.Size(360, 40)
 $dragPanel.BackColor = [System.Drawing.Color]::FromArgb(20, 20, 20)
 $dragPanel.Cursor = [System.Windows.Forms.Cursors]::SizeAll
 
-# Eventi per il trascinamento
+# Eventi per il trascinamento anche dal pannello
 $dragPanel.Add_MouseDown({
     param($sender, $e)
     if ($e.Button -eq [System.Windows.Forms.MouseButtons]::Left) {
@@ -258,7 +288,7 @@ Write-Host "╔═════════════════════�
 Write-Host "║     ZEKROM FILELESS CLICKER       ║" -ForegroundColor White
 Write-Host "║         BY DAANII06_               ║" -ForegroundColor White
 Write-Host "╚════════════════════════════════════╝" -ForegroundColor White
-Write-Host "Loaded successfully!" -ForegroundColor Green
+Write-Host "Loaded successfully! (Puoi trascinare la finestra da qualsiasi punto)" -ForegroundColor Green
 
 # Mostra il form
 [void]$form.ShowDialog()
