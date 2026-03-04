@@ -67,7 +67,7 @@ $dragPanel.Controls.Add($buttonClose)
 
 # Titolo
 $labelTitle = New-Object System.Windows.Forms.Label
-$labelTitle.Text = "RESHIRAM FILELESS"
+$labelTitle.Text = "Reshiram Fileless"
 $labelTitle.Location = New-Object System.Drawing.Point(40, 5)
 $labelTitle.Size = New-Object System.Drawing.Size(240, 30)
 $labelTitle.Font = New-Object System.Drawing.Font("Segoe UI", 14, [System.Drawing.FontStyle]::Bold)
