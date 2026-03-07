@@ -4,10 +4,10 @@ Add-Type -AssemblyName System.Drawing
 # Creazione del form principale
 $form = New-Object System.Windows.Forms.Form
 $form.Text = "By Made Daanii06_ "
-$form.Size = New-Object System.Drawing.Size(360, 400)  # Altezza aumentata per i nuovi controlli
+$form.Size = New-Object System.Drawing.Size(360, 400)
 $form.StartPosition = "CenterScreen"
 $form.FormBorderStyle = "None"
-$form.BackColor = [System.Drawing.Color]::FromArgb(10, 10, 10)  # Nero più profondo
+$form.BackColor = [System.Drawing.Color]::FromArgb(10, 10, 10)
 $form.TopMost = $true
 $form.KeyPreview = $true
 
@@ -16,9 +16,11 @@ $script:dragging = $false
 $script:offsetX = 0
 $script:offsetY = 0
 
-# Variabili per il click rate
-$script:clickCount = 0
-$script:lastCpsUpdate = (Get-Date)
+# Variabili separate per i click rate
+$script:leftClickCount = 0
+$script:rightClickCount = 0
+$script:lastLeftCpsUpdate = (Get-Date)
+$script:lastRightCpsUpdate = (Get-Date)
 
 # Eventi per il trascinamento su tutto il form
 $form.Add_MouseDown({
@@ -187,7 +189,7 @@ $leftClickBtn.Add_Click({
         $script:leftTimer = New-Object System.Windows.Forms.Timer
         $script:leftTimer.Interval = $trackbar.Value
         $script:leftTimer.Add_Tick({
-            $script:clickCount++
+            $script:leftClickCount++
             [System.Windows.Forms.Cursor]::Position = [System.Windows.Forms.Cursor]::Position
             Add-Type -AssemblyName System.Windows.Forms
             $signature = @'
@@ -198,14 +200,14 @@ public static extern void mouse_event(long dwFlags, long dx, long dy, long cButt
             $SendMouseClick::mouse_event(0x00000002, 0, 0, 0, 0)
             $SendMouseClick::mouse_event(0x00000004, 0, 0, 0, 0)
             
-            # Aggiorna CPS in tempo reale
+            # Aggiorna CPS in tempo reale per il tasto sinistro
             $now = Get-Date
-            $elapsed = ($now - $script:lastCpsUpdate).TotalSeconds
+            $elapsed = ($now - $script:lastLeftCpsUpdate).TotalSeconds
             if ($elapsed -ge 1) {
-                $realTimeCps = [math]::Round($script:clickCount / $elapsed, 1)
+                $realTimeCps = [math]::Round($script:leftClickCount / $elapsed, 1)
                 $leftClickBtn.Text = "LEFT ($realTimeCps CPS)"
-                $script:clickCount = 0
-                $script:lastCpsUpdate = $now
+                $script:leftClickCount = 0
+                $script:lastLeftCpsUpdate = $now
             }
         })
         $script:leftTimer.Start()
@@ -213,8 +215,8 @@ public static extern void mouse_event(long dwFlags, long dx, long dy, long cButt
         $leftClickBtn.ForeColor = [System.Drawing.Color]::FromArgb(10, 10, 10)
         $leftClickBtn.Text = "LEFT ON (0 CPS)"
         $leftClickBtn.FlatAppearance.BorderColor = [System.Drawing.Color]::FromArgb(10, 10, 10)
-        $script:clickCount = 0
-        $script:lastCpsUpdate = Get-Date
+        $script:leftClickCount = 0
+        $script:lastLeftCpsUpdate = Get-Date
     }
 })
 $form.Controls.Add($leftClickBtn)
@@ -244,7 +246,7 @@ $rightClickBtn.Add_Click({
         $script:rightTimer = New-Object System.Windows.Forms.Timer
         $script:rightTimer.Interval = $trackbar.Value
         $script:rightTimer.Add_Tick({
-            $script:clickCount++
+            $script:rightClickCount++
             [System.Windows.Forms.Cursor]::Position = [System.Windows.Forms.Cursor]::Position
             Add-Type -AssemblyName System.Windows.Forms
             $signature = @'
@@ -255,14 +257,14 @@ public static extern void mouse_event(long dwFlags, long dx, long dy, long cButt
             $SendMouseClick::mouse_event(0x00000008, 0, 0, 0, 0)
             $SendMouseClick::mouse_event(0x00000010, 0, 0, 0, 0)
             
-            # Aggiorna CPS in tempo reale
+            # Aggiorna CPS in tempo reale per il tasto destro
             $now = Get-Date
-            $elapsed = ($now - $script:lastCpsUpdate).TotalSeconds
+            $elapsed = ($now - $script:lastRightCpsUpdate).TotalSeconds
             if ($elapsed -ge 1) {
-                $realTimeCps = [math]::Round($script:clickCount / $elapsed, 1)
+                $realTimeCps = [math]::Round($script:rightClickCount / $elapsed, 1)
                 $rightClickBtn.Text = "RIGHT ($realTimeCps CPS)"
-                $script:clickCount = 0
-                $script:lastCpsUpdate = $now
+                $script:rightClickCount = 0
+                $script:lastRightCpsUpdate = $now
             }
         })
         $script:rightTimer.Start()
@@ -270,8 +272,8 @@ public static extern void mouse_event(long dwFlags, long dx, long dy, long cButt
         $rightClickBtn.ForeColor = [System.Drawing.Color]::FromArgb(10, 10, 10)
         $rightClickBtn.Text = "RIGHT ON (0 CPS)"
         $rightClickBtn.FlatAppearance.BorderColor = [System.Drawing.Color]::FromArgb(10, 10, 10)
-        $script:clickCount = 0
-        $script:lastCpsUpdate = Get-Date
+        $script:rightClickCount = 0
+        $script:lastRightCpsUpdate = Get-Date
     }
 })
 $form.Controls.Add($rightClickBtn)
