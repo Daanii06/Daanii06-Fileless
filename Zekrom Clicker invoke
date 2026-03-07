@@ -16,7 +16,7 @@ $script:dragging = $false
 $script:offsetX = 0
 $script:offsetY = 0
 
-# Variabili separate per i click rate
+# Variabili per il click rate - SEPARATE per sinistro e destro
 $script:leftClickCount = 0
 $script:rightClickCount = 0
 $script:lastLeftCpsUpdate = (Get-Date)
@@ -186,9 +186,6 @@ $leftClickBtn.Add_Click({
         $leftClickBtn.Text = "LEFT CLICK"
         $leftClickBtn.FlatAppearance.BorderColor = [System.Drawing.Color]::White
     } else {
-        # Ferma qualsiasi timer attivo prima di crearne uno nuovo
-        if ($script:leftTimer) { $script:leftTimer.Stop(); $script:leftTimer.Dispose() }
-        
         $script:leftTimer = New-Object System.Windows.Forms.Timer
         $script:leftTimer.Interval = $trackbar.Value
         $script:leftTimer.Add_Tick({
@@ -202,7 +199,7 @@ public static extern void mouse_event(long dwFlags, long dx, long dy, long cButt
             $SendMouseClick::mouse_event(0x00000002, 0, 0, 0, 0)
             $SendMouseClick::mouse_event(0x00000004, 0, 0, 0, 0)
             
-            # Aggiorna il contatore CPS
+            # Aggiorna il contatore CPS per il tasto sinistro
             $script:leftClickCount++
             
             # Aggiorna CPS in tempo reale
@@ -226,7 +223,7 @@ public static extern void mouse_event(long dwFlags, long dx, long dy, long cButt
 })
 $form.Controls.Add($leftClickBtn)
 
-# Right click button
+# Right click button - CORRETTO
 $rightClickBtn = New-Object System.Windows.Forms.Button
 $rightClickBtn.Text = "RIGHT CLICK"
 $rightClickBtn.Location = New-Object System.Drawing.Point(190, 150)
@@ -248,9 +245,6 @@ $rightClickBtn.Add_Click({
         $rightClickBtn.Text = "RIGHT CLICK"
         $rightClickBtn.FlatAppearance.BorderColor = [System.Drawing.Color]::White
     } else {
-        # Ferma qualsiasi timer attivo prima di crearne uno nuovo
-        if ($script:rightTimer) { $script:rightTimer.Stop(); $script:rightTimer.Dispose() }
-        
         $script:rightTimer = New-Object System.Windows.Forms.Timer
         $script:rightTimer.Interval = $trackbar.Value
         $script:rightTimer.Add_Tick({
@@ -264,7 +258,7 @@ public static extern void mouse_event(long dwFlags, long dx, long dy, long cButt
             $SendMouseClick::mouse_event(0x00000008, 0, 0, 0, 0)
             $SendMouseClick::mouse_event(0x00000010, 0, 0, 0, 0)
             
-            # Aggiorna il contatore CPS
+            # Aggiorna il contatore CPS per il tasto destro
             $script:rightClickCount++
             
             # Aggiorna CPS in tempo reale
