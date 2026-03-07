@@ -164,7 +164,7 @@ $cpsTrackbar.Add_ValueChanged({
 })
 $cpsPanel.Controls.Add($cpsTrackbar)
 
-# Left click button
+# Left click button - CORRETTO
 $leftClickBtn = New-Object System.Windows.Forms.Button
 $leftClickBtn.Text = "LEFT CLICK"
 $leftClickBtn.Location = New-Object System.Drawing.Point(40, 150)
@@ -186,12 +186,14 @@ $leftClickBtn.Add_Click({
         $leftClickBtn.Text = "LEFT CLICK"
         $leftClickBtn.FlatAppearance.BorderColor = [System.Drawing.Color]::White
     } else {
+        # Ferma qualsiasi timer attivo prima di crearne uno nuovo
+        if ($script:leftTimer) { $script:leftTimer.Stop(); $script:leftTimer.Dispose() }
+        
         $script:leftTimer = New-Object System.Windows.Forms.Timer
         $script:leftTimer.Interval = $trackbar.Value
         $script:leftTimer.Add_Tick({
-            $script:leftClickCount++
+            # Esegui il click sinistro
             [System.Windows.Forms.Cursor]::Position = [System.Windows.Forms.Cursor]::Position
-            Add-Type -AssemblyName System.Windows.Forms
             $signature = @'
 [DllImport("user32.dll", CharSet=CharSet.Auto, CallingConvention=CallingConvention.StdCall)]
 public static extern void mouse_event(long dwFlags, long dx, long dy, long cButtons, long dwExtraInfo);
@@ -200,7 +202,10 @@ public static extern void mouse_event(long dwFlags, long dx, long dy, long cButt
             $SendMouseClick::mouse_event(0x00000002, 0, 0, 0, 0)
             $SendMouseClick::mouse_event(0x00000004, 0, 0, 0, 0)
             
-            # Aggiorna CPS in tempo reale per il tasto sinistro
+            # Aggiorna il contatore CPS
+            $script:leftClickCount++
+            
+            # Aggiorna CPS in tempo reale
             $now = Get-Date
             $elapsed = ($now - $script:lastLeftCpsUpdate).TotalSeconds
             if ($elapsed -ge 1) {
@@ -243,12 +248,14 @@ $rightClickBtn.Add_Click({
         $rightClickBtn.Text = "RIGHT CLICK"
         $rightClickBtn.FlatAppearance.BorderColor = [System.Drawing.Color]::White
     } else {
+        # Ferma qualsiasi timer attivo prima di crearne uno nuovo
+        if ($script:rightTimer) { $script:rightTimer.Stop(); $script:rightTimer.Dispose() }
+        
         $script:rightTimer = New-Object System.Windows.Forms.Timer
         $script:rightTimer.Interval = $trackbar.Value
         $script:rightTimer.Add_Tick({
-            $script:rightClickCount++
+            # Esegui il click destro
             [System.Windows.Forms.Cursor]::Position = [System.Windows.Forms.Cursor]::Position
-            Add-Type -AssemblyName System.Windows.Forms
             $signature = @'
 [DllImport("user32.dll", CharSet=CharSet.Auto, CallingConvention=CallingConvention.StdCall)]
 public static extern void mouse_event(long dwFlags, long dx, long dy, long cButtons, long dwExtraInfo);
@@ -257,7 +264,10 @@ public static extern void mouse_event(long dwFlags, long dx, long dy, long cButt
             $SendMouseClick::mouse_event(0x00000008, 0, 0, 0, 0)
             $SendMouseClick::mouse_event(0x00000010, 0, 0, 0, 0)
             
-            # Aggiorna CPS in tempo reale per il tasto destro
+            # Aggiorna il contatore CPS
+            $script:rightClickCount++
+            
+            # Aggiorna CPS in tempo reale
             $now = Get-Date
             $elapsed = ($now - $script:lastRightCpsUpdate).TotalSeconds
             if ($elapsed -ge 1) {
@@ -333,22 +343,16 @@ $form.Add_KeyDown({
     param($sender, $e)
     switch ($e.KeyCode) {
         'F6' {
-            if (-not $script:leftTimer -or -not $script:leftTimer.Enabled) {
-                $leftClickBtn.PerformClick()
-            }
+            $leftClickBtn.PerformClick()
             $e.SuppressKeyPress = $true
         }
         'F7' {
-            if (-not $script:rightTimer -or -not $script:rightTimer.Enabled) {
-                $rightClickBtn.PerformClick()
-            }
+            $rightClickBtn.PerformClick()
             $e.SuppressKeyPress = $true
         }
         'F8' {
-            if (($script:leftTimer -and $script:leftTimer.Enabled) -or ($script:rightTimer -and $script:rightTimer.Enabled)) {
-                if ($script:leftTimer -and $script:leftTimer.Enabled) { $leftClickBtn.PerformClick() }
-                if ($script:rightTimer -and $script:rightTimer.Enabled) { $rightClickBtn.PerformClick() }
-            }
+            if ($script:leftTimer -and $script:leftTimer.Enabled) { $leftClickBtn.PerformClick() }
+            if ($script:rightTimer -and $script:rightTimer.Enabled) { $rightClickBtn.PerformClick() }
             $e.SuppressKeyPress = $true
         }
     }
